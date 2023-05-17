@@ -1,3 +1,8 @@
-venv
+*venv*
 media
 slides
+slides_assets
+slides.html
+.vscode
+build
+Saper_assets
