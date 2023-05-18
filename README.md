@@ -2,7 +2,7 @@
 
 ![](vids/title_slide.gif)
 
-<center><b>S</b>urface <b>A</b>rea <b>P</b>resentation mak<b>ER</b></center>
+*S*urface *A*rea *P*resentation mak*ER*
 
 <hr/>
 
