@@ -1,14 +1,54 @@
 from manim import *
 # or: from manimlib import *
 from manim_slides import Slide
+import math
+
 
 class Saper(Slide):
-    def construct(self):
-        title = VGroup(
-            Text("Surface Area of Rotation", t2c={"[:]": BLUE}),
-            # Text("to slides presentation", t2c={"to": BLUE}),
-            Text("by Daniel, Bryan, Jacqueline, and Esther", t2c={"[:]": ORANGE}),
-        ).arrange(DOWN)
 
-        self.play(FadeIn(title))
+    def tinywait(self):
+        self.wait(0.1)
+
+    def title_slide(self):
+        ax = Axes(
+            x_range=[0, 10, 2.5], y_range=[0, 4, 1], x_length=4, y_length=2.5, axis_config={"include_tip": False, }
+        )
+        labels = ax.get_axis_labels(x_label="x", y_label="y")
+        graph = ax.plot(lambda x: -0.1*(x - 5)**2 + 3, color=MAROON)
+        riemann = ax.get_riemann_rectangles(graph, dx=1.0, input_sample_type="center", color=[color.BLUE_B, color.GREEN_B])
+
+        graph_group = VGroup(ax, labels, riemann, graph)
+
+        # self.play(t.animate.set_value(x_space[minimum_index]))
+
+        # TITLE SLIDE
+        title = VGroup(
+            Text("Surface Area of Rotation", font_size=60.0, t2c={"[:]": color.LIGHT_PINK}),
+            Text("by Daniel, Bryan, Jacqueline, and Esther", font_size=36.0, t2c={"[:]": color.WHITE}),
+        ).arrange(DOWN).to_edge(DOWN, buff=LARGE_BUFF*1.8)
+        
+        title_graph = graph_group.next_to(title, direction=UP, buff=MED_LARGE_BUFF)
+
+        self.play(Write(title_graph), FadeIn(title))
+
+    def slide1(self):
+        # SLIDE 1
+        dot = Dot([-2, -1, 0])
+        dot2 = Dot([2, 1, 0])
+        line = Line(dot.get_center(), dot2.get_center()).set_color(ORANGE)
+        b1 = Brace(line)
+        b1text = b1.get_text("Horizontal distance")
+        b2 = Brace(line, direction=line.copy().rotate(PI / 2).get_unit_vector())
+        b2text = b2.get_tex("x-x_1")
+        slide1 = VGroup(line, dot, dot2, b1, b2, b1text, b2text)
+        self.play(FadeIn(slide1))
+
+    def construct(self):
+        self.title_slide()
+        
+        self.next_slide()
+        self.clear()
+        
+        self.slide1()
+        
         self.next_slide()
