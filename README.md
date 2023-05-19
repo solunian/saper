@@ -2,7 +2,7 @@
 
 ![](vids/title_slide.gif)
 
-*S*urface *A*rea *P*resentation mak*ER*
+**S**urface **A**rea **P**resentation mak**ER**
 
 <hr/>
 
