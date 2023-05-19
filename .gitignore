@@ -6,3 +6,4 @@ slides.html
 .vscode
 build
 Saper_assets
+__pycache__
