@@ -43,6 +43,12 @@ class Saper(Slide):
         slide1 = VGroup(line, dot, dot2, b1, b2, b1text, b2text)
         self.play(FadeIn(slide1))
 
+    def slide2(self):
+        
+        sa_formula = MathTex(r"\int_{a}^{b}2 \pi f(x) \sqrt{1 +  f'(x)^ 2}dx")
+        group = VGroup(sa_formula)
+        self.play(Write(group))
+
     def construct(self):
         self.title_slide()
         
@@ -51,4 +57,8 @@ class Saper(Slide):
         
         self.slide1()
         
+        self.next_slide()
+        self.clear()
+
+        self.slide2()
         self.next_slide()
