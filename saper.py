@@ -1,10 +1,20 @@
 from manim import *
+from manim import opengl
+
 # or: from manimlib import *
-from manim_slides import Slide
+from manim_slides import Slide, ThreeDSlide
 import math
 
+class Saper3D(ThreeDSlide):
 
-class Saper(Slide):
+    def construct(self):
+        self.slide1()
+        self.next_slide()
+        
+    pass
+
+
+class Saper(Slide, ThreeDScene):
 
     def tinywait(self):
         self.wait(0.1)
@@ -15,6 +25,8 @@ class Saper(Slide):
         )
         labels = ax.get_axis_labels(x_label="x", y_label="y")
         graph = ax.plot(lambda x: -0.1*(x - 5)**2 + 3, color=MAROON)
+
+
         riemann = ax.get_riemann_rectangles(graph, dx=1.0, input_sample_type="center", color=[color.BLUE_B, color.GREEN_B])
 
         graph_group = VGroup(ax, labels, riemann, graph)
@@ -30,6 +42,29 @@ class Saper(Slide):
         title_graph = graph_group.next_to(title, direction=UP, buff=MED_LARGE_BUFF)
 
         self.play(Write(title_graph), FadeIn(title))
+
+    def slide3(self):
+        axes = ThreeDAxes()
+        circle = Circle(radius=3, color=BLUE)
+        dot = Dot(color=RED)
+
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+
+
+        func = lambda x: np.sin(x) + 2;
+
+        # graph = axes.plot(, x_range=[-3, 3], color=RED)
+        surface = opengl.OpenGLSurface (
+            lambda u, v: axes.c2p(u, func(u) * np.cos(v), func(u) * np.sin(v)), u_range=[-3, 3], v_range=[0, np.pi * 2], color=RED
+        )
+
+        self.play(FadeIn(surface))
+        self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
+
+
+
 
     def slide1(self):
         # SLIDE 1
@@ -62,3 +97,10 @@ class Saper(Slide):
 
         self.slide2()
         self.next_slide()
+        self.clear()
+
+        # 3d anuimation, takes a while to render
+        self.slide3()
+
+        self.next_slide()
+        self.clear()
