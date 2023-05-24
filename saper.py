@@ -95,7 +95,7 @@ class Saper(Slide, ThreeDScene):
 
     def slide4(self):
         axes = ThreeDAxes()
-        circle = Circle(radius=3, color=BLUE)
+        # circle = Circle(radius=3, color=BLUE)
         dot = Dot(color=RED)
 
         self.add(axes)
@@ -112,12 +112,30 @@ class Saper(Slide, ThreeDScene):
             lambda u, v: axes.c2p(u, func(u) * np.cos(v), func(u) * np.sin(v)), u_range=[-3, 3], v_range=[0, OFFSET_TAU], color=RED, opacity=0.5
         )
 
+        # TODO: fix the trapezoids?
+        circles = []
+        start = -3.0
+        stop = 3.0
+        partitions = 6
+        dx = (stop - start) / partitions
+        for i in np.arange(start, stop, dx):
+            circles.append(opengl.OpenGLSurface (
+                lambda u, v: axes.c2p(u, func(u + dx) * np.cos(v), func(u + dx) * np.sin(v)), u_range=[i, i + dx], v_range=[0, OFFSET_TAU], 
+                color=RED_D, opacity=0.8
+            ))
+
 
         self.play(Write(VGroup(axes)), Write(VGroup(graph)))
         self.wait(0.2)
 
 
-        self.play(Create(surface))
+        self.play(FadeIn(surface))
+        self.wait(0.2)
+        self.play(FadeOut(surface))
+
+        for c in circles:
+            self.play(Create(c))
+        
         # self.play()
         # self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
         
