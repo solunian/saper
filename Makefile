@@ -8,5 +8,5 @@ build:
 run:
 	manim-slides Saper
 
-run_html:
+html:
 	manim-slides convert Saper build/Saper.html --open
