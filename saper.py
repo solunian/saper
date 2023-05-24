@@ -94,55 +94,71 @@ class Saper(Slide, ThreeDScene):
     # A = ∑i = 1 → n( 2pi * f(x) * sqrt(ds;kasdf) * change in x)
 
     def slide4(self):
-        axes = ThreeDAxes()
+        axes = ThreeDAxes(x_length=8, y_length=6, z_length=4)
+        labels = axes.get_axis_labels(x_label="x", y_label="y", z_label="z")
         # circle = Circle(radius=3, color=BLUE)
-        dot = Dot(color=RED)
+        # dot = Dot(color=RED)
 
         self.add(axes)
 
-        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+        self.set_camera_orientation(phi=0 * DEGREES, theta=-90 * DEGREES, gamma=90 * DEGREES)
+        # self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES,)
 
 
         func = lambda x: np.sin(x) + 2
-        graph = axes.plot(func, color=color.ORANGE, stroke_width=8)
+        curve = axes.plot(func, color=color.ORANGE, stroke_width=8)
 
 
-        # graph = axes.plot(, x_range=[-3, 3], color=RED)
+        # generate surface for the func plot
         surface = opengl.OpenGLSurface (
-            lambda u, v: axes.c2p(u, func(u) * np.cos(v), func(u) * np.sin(v)), u_range=[-3, 3], v_range=[0, OFFSET_TAU], color=RED, opacity=0.5
+            lambda u, v: axes.c2p(u, func(u) * np.cos(v), func(u) * np.sin(v)), u_range=[-3, 3], v_range=[0, OFFSET_TAU], 
+            color=RED, opacity=0.5
         )
 
-        # TODO: fix the trapezoids?
+        # generate the "riemann circle trapezoid thingys"
         circles = []
         start = -3.0
         stop = 3.0
-        partitions = 6
+        partitions = 8
+        colors = [PURPLE, LIGHT_PINK, MAROON, ORANGE, YELLOW_B, GREEN, TEAL, BLUE]
         dx = (stop - start) / partitions
         for i in np.arange(start, stop, dx):
+            linef = lambda x: ((func(i + dx) - func(i)) / dx) * (x - i) + func(i)
+            
             circles.append(opengl.OpenGLSurface (
-                lambda u, v: axes.c2p(u, func(u + dx) * np.cos(v), func(u + dx) * np.sin(v)), u_range=[i, i + dx], v_range=[0, OFFSET_TAU], 
-                color=RED_D, opacity=0.8
+                lambda u, v: axes.c2p(u, linef(u) * np.cos(v), linef(u) * np.sin(v)), u_range=[i, i + dx], v_range=[0, OFFSET_TAU], 
+                color=colors[int((i + start) / dx)], opacity=0.8, gloss=0.1, shadow=0.1
             ))
 
 
-        self.play(Write(VGroup(axes)), Write(VGroup(graph)))
-        self.wait(0.2)
+
+        # 
+        self.play(Write(VGroup(axes, labels, curve)))
+        
+        self.next_slide()
+
+        # rotation from flat plane
+        self.begin_ambient_camera_rotation(rate=120 * DEGREES, about="theta")
+        self.begin_ambient_camera_rotation(rate=75 * DEGREES, about="phi")
+        self.begin_ambient_camera_rotation(rate=-90 * DEGREES, about="gamma")
+
+        self.wait()
+
+        # rotation needs to stop apparently
+        self.stop_ambient_camera_rotation("theta")
+        self.stop_ambient_camera_rotation("phi")
+        self.stop_ambient_camera_rotation("gamma")
 
 
-        self.play(FadeIn(surface))
-        self.wait(0.2)
+        self.play(Create(surface))
+
+        self.next_slide()
+        
         self.play(FadeOut(surface))
 
         for c in circles:
-            self.play(Create(c))
+            self.play(Create(c), subcaption_duration=0.001)
         
-        # self.play()
-        # self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
-        
-
-
-        
-
 
     def construct(self):
         # self.title_slide()
