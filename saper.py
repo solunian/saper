@@ -5,7 +5,8 @@ from manim import opengl
 from manim_slides import Slide, ThreeDSlide
 import math
 
-OFFSET_TAU = PI * 2 + 0.001
+OFFSET_TAU = PI * 2 + 0.01
+
 
 class Saper3D(ThreeDSlide):
 
@@ -103,6 +104,8 @@ class Saper(Slide, ThreeDScene):
 
 
         func = lambda x: np.sin(x) + 2
+        graph = axes.plot(func, color=color.ORANGE, stroke_width=8)
+
 
         # graph = axes.plot(, x_range=[-3, 3], color=RED)
         surface = opengl.OpenGLSurface (
@@ -110,33 +113,39 @@ class Saper(Slide, ThreeDScene):
         )
 
 
-        self.play(Write(VGroup(axes, circle, dot)), Create(surface))
-        self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
+        self.play(Write(VGroup(axes)), Write(VGroup(graph)))
+        self.wait(0.2)
+
+
+        self.play(Create(surface))
+        # self.play()
+        # self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
+        
 
 
         
 
 
     def construct(self):
-        self.title_slide()
+        # self.title_slide()
         
-        self.next_slide()
-        self.clear()
+        # self.next_slide()
+        # self.clear()
+
+        # self.slide1()
         
-        self.slide1()
-        
-        self.next_slide()
-        self.clear()
+        # self.next_slide()
+        # self.clear()
 
-        self.slide2()
-        self.next_slide()
-        self.clear()
+        # self.slide2()
+        # self.next_slide()
+        # self.clear()
 
-        # 3d anuimation, takes a while to render
-        self.slide3()
+        # # 3d anuimation, takes a while to render
+        # self.slide3()
 
-        self.next_slide()
-        self.clear()
+        # self.next_slide()
+        # self.clear()
 
         self.slide4()
 
