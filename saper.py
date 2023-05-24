@@ -5,6 +5,8 @@ from manim import opengl
 from manim_slides import Slide, ThreeDSlide
 import math
 
+OFFSET_TAU = PI * 2 + 0.001
+
 class Saper3D(ThreeDSlide):
 
     def construct(self):
@@ -63,9 +65,6 @@ class Saper(Slide, ThreeDScene):
         self.play(FadeIn(surface))
         self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
 
-
-
-
     def slide1(self):
         # SLIDE 1
         dot = Dot([-2, -1, 0])
@@ -83,6 +82,40 @@ class Saper(Slide, ThreeDScene):
         sa_formula = MathTex(r"\int_{a}^{b}2 \pi f(x) \sqrt{1 +  f'(x)^ 2}dx")
         group = VGroup(sa_formula)
         self.play(Write(group))
+
+
+    # Riemann cylinders on a curve
+    # Each slice of surface area → A = 2pi * f((Xa + Xb)/2) * change in length
+    # Xa ~= Xb because riemann
+    # Replace function with f(x) in equation
+    # Replace length with definition of two points
+    # Final Riemann sum definition 
+    # A = ∑i = 1 → n( 2pi * f(x) * sqrt(ds;kasdf) * change in x)
+
+    def slide4(self):
+        axes = ThreeDAxes()
+        circle = Circle(radius=3, color=BLUE)
+        dot = Dot(color=RED)
+
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+
+
+        func = lambda x: np.sin(x) + 2
+
+        # graph = axes.plot(, x_range=[-3, 3], color=RED)
+        surface = opengl.OpenGLSurface (
+            lambda u, v: axes.c2p(u, func(u) * np.cos(v), func(u) * np.sin(v)), u_range=[-3, 3], v_range=[0, OFFSET_TAU], color=RED, opacity=0.5
+        )
+
+
+        self.play(Write(VGroup(axes, circle, dot)), Create(surface))
+        self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
+
+
+        
+
 
     def construct(self):
         self.title_slide()
@@ -104,3 +137,10 @@ class Saper(Slide, ThreeDScene):
 
         self.next_slide()
         self.clear()
+
+        self.slide4()
+
+        self.next_slide()
+        self.clear()
+
+
