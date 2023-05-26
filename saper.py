@@ -1,6 +1,8 @@
 from manim import *
 from manim import opengl
 
+from PIL import Image
+
 # or: from manimlib import *
 from manim_slides import Slide, ThreeDSlide
 import math
@@ -21,6 +23,11 @@ class Saper(Slide, ThreeDScene):
 
     def tinywait(self):
         self.wait(0.1)
+
+    def fade_out_clear(self):
+        self.play(*[FadeOut(Group(o)) for o in self.mobjects])
+        self.clear()
+        
 
     def title_slide(self):
         ax = Axes(
@@ -84,6 +91,37 @@ class Saper(Slide, ThreeDScene):
         group = VGroup(sa_formula)
         self.play(Write(group))
 
+    def info_slide(self):
+        q = Text("Surface Area of Rotation", font_size=50).to_edge(UP, buff=LARGE_BUFF * 2)
+        a = Text("The surface area that a graph makes when rotated!", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(q, DOWN, buff=SMALL_BUFF * 3)
+        pi_creature = opengl.OpenGLImageMobject("imgs/hooray.png").next_to(a, DOWN, buff=SMALL_BUFF / 2)
+
+        self.play(FadeIn(VGroup(q)))
+        self.play(Write(VGroup(a)))
+        self.add(opengl.OpenGLGroup(pi_creature))
+
+        self.wait()
+
+        self.next_slide()
+        self.fade_out_clear()
+
+        
+        circle = Circle(radius=2.5, color=RED)
+        radius = Line(start=circle.get_center(), end=circle.get_right())
+        r_text = Text("r").next_to(radius, direction=DOWN)
+
+        self.play(GrowFromCenter(circle))
+        self.play(Write(VGroup(radius, r_text)))
+
+        self.next_slide()
+        self.fade_out_clear()
+        
+        vis_text = Text("Well here's what that looks like...")
+        self.play(FadeIn(vis_text))
+        
+        self.wait()
+        self.fade_out_clear()
+
 
     # Riemann cylinders on a curve
     # Each slice of surface area → A = 2pi * f((Xa + Xb)/2) * change in length
@@ -94,6 +132,7 @@ class Saper(Slide, ThreeDScene):
     # A = ∑i = 1 → n( 2pi * f(x) * sqrt(ds;kasdf) * change in x)
 
     def slide4(self):
+        self.set_camera_orientation(0, 0, 0)
         axes = ThreeDAxes(x_length=8, y_length=6, z_length=4)
         labels = axes.get_axis_labels(x_label="x", y_label="y", z_label="z")
         # circle = Circle(radius=3, color=BLUE)
@@ -156,15 +195,19 @@ class Saper(Slide, ThreeDScene):
         
         self.play(FadeOut(surface))
 
-        for c in circles:
-            self.play(Create(c), subcaption_duration=0.001)
+        
+        self.play(*[Create(c) for c in circles])
         
 
     def construct(self):
-        # self.title_slide()
+        self.title_slide()
         
-        # self.next_slide()
-        # self.clear()
+        self.next_slide()
+        self.clear()
+
+        self.info_slide()
+
+        self.clear()
 
         # self.slide1()
         
@@ -175,7 +218,7 @@ class Saper(Slide, ThreeDScene):
         # self.next_slide()
         # self.clear()
 
-        # # 3d anuimation, takes a while to render
+        # 3d animation, takes a while to render
         # self.slide3()
 
         # self.next_slide()

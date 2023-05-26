@@ -3,7 +3,7 @@ default:
 	manim-slides Saper
 
 build:
-	manim saper.py Saper
+	manim saper.py Saper --renderer=opengl --write_to_movie
 
 run:
 	manim-slides Saper
