@@ -1,8 +1,6 @@
 from manim import *
 from manim import opengl
 
-from PIL import Image
-
 # or: from manimlib import *
 from manim_slides import Slide, ThreeDSlide
 import math
@@ -20,9 +18,6 @@ class Saper3D(ThreeDSlide):
 
 
 class Saper(Slide, ThreeDScene):
-
-    def tinywait(self):
-        self.wait(0.1)
 
     def fade_out_clear(self):
         self.play(*[FadeOut(Group(o)) for o in self.mobjects])
@@ -102,11 +97,9 @@ class Saper(Slide, ThreeDScene):
 
         self.wait()
 
-        self.next_slide()
-        self.fade_out_clear()
-
-        
-        circle = Circle(radius=2.5, color=RED)
+    def circle_slide(self):
+        r_value = 1.5
+        circle = Circle(radius=r_value, color=RED)
         radius = Line(start=circle.get_center(), end=circle.get_right())
         r_text = Text("r").next_to(radius, direction=DOWN)
 
@@ -114,13 +107,23 @@ class Saper(Slide, ThreeDScene):
         self.play(Write(VGroup(radius, r_text)))
 
         self.next_slide()
-        self.fade_out_clear()
+
+        # TODO: figure out how to set the damn length of this line
+
+        # start = Dot((-r_value * PI, 0, 0))
+        # end = Dot((r_value * PI, 0, 0))
+        circum = Line(start=(-r_value * PI, 0, 0), end=(r_value * PI, 0, 0)).to_edge(UP, buff=LARGE_BUFF * 2.5).set_color(RED)
+        # circum.set_length(-r_value * PI * 2)
+        circum_text = Text("circumference", color=RED).next_to(circum, direction=UP, buff=MED_SMALL_BUFF * 1.5)
+
+        new_radius = Line(start=(0, -r_value / 2, 0), end=(0, r_value / 2, 0)).next_to(circum, direction=DL, buff=MED_LARGE_BUFF)
+        # new_radius.set_length(r_value)
+        new_r_text = MathTex(r"r \cdot 2 \cdot \pi").next_to(new_radius, direction=RIGHT, buff=MED_LARGE_BUFF)
+
+        self.play(Transform(circle, circum), Write(VGroup(circum_text)), Transform(radius, new_radius), FadeOut(r_text), FadeIn(VGroup(new_r_text)))
         
-        vis_text = Text("Well here's what that looks like...")
-        self.play(FadeIn(vis_text))
         
         self.wait()
-        self.fade_out_clear()
 
 
     # Riemann cylinders on a curve
@@ -131,7 +134,7 @@ class Saper(Slide, ThreeDScene):
     # Final Riemann sum definition 
     # A = ∑i = 1 → n( 2pi * f(x) * sqrt(ds;kasdf) * change in x)
 
-    def slide4(self):
+    def sin_3d_slide(self):
         self.set_camera_orientation(0, 0, 0)
         axes = ThreeDAxes(x_length=8, y_length=6, z_length=4)
         labels = axes.get_axis_labels(x_label="x", y_label="y", z_label="z")
@@ -197,36 +200,30 @@ class Saper(Slide, ThreeDScene):
 
         
         self.play(*[Create(c) for c in circles])
+
+        self.next_slide()
         
 
     def construct(self):
         self.title_slide()
         
         self.next_slide()
-        self.clear()
+        self.fade_out_clear()
 
         self.info_slide()
-
-        self.clear()
-
-        # self.slide1()
         
-        # self.next_slide()
-        # self.clear()
+        self.next_slide()
+        self.fade_out_clear()
 
-        # self.slide2()
-        # self.next_slide()
-        # self.clear()
+        self.circle_slide()
+        
+        self.next_slide()
+        self.fade_out_clear()
+
+        self.sin_3d_slide()
 
         # 3d animation, takes a while to render
         # self.slide3()
 
         # self.next_slide()
         # self.clear()
-
-        self.slide4()
-
-        self.next_slide()
-        self.clear()
-
-
