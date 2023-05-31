@@ -48,27 +48,7 @@ class Saper(Slide, ThreeDScene):
 
         self.play(Write(title_graph), FadeIn(title))
 
-    def slide3(self):
-        axes = ThreeDAxes()
-        circle = Circle(radius=3, color=BLUE)
-        dot = Dot(color=RED)
 
-        self.add(axes)
-
-        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
-
-
-        func = lambda x: np.sin(x) + 2;
-
-        # graph = axes.plot(, x_range=[-3, 3], color=RED)
-        surface = opengl.OpenGLSurface (
-            lambda u, v: axes.c2p(u, func(u) * np.cos(v), func(u) * np.sin(v)), u_range=[-3, 3], v_range=[0, np.pi * 2], color=RED
-        )
-
-        self.play(FadeIn(surface))
-        self.begin_ambient_camera_rotation(rate=75 * DEGREES / 4)
-
-    def slide1(self):
         # SLIDE 1
         dot = Dot([-2, -1, 0])
         dot2 = Dot([2, 1, 0])
@@ -97,7 +77,8 @@ class Saper(Slide, ThreeDScene):
 
         self.wait()
 
-    def circle_slide(self):
+    # with circle and length of curve
+    def review_slide(self):
         r_value = 1.5
         circle = Circle(radius=r_value, color=RED)
         radius = Line(start=circle.get_center(), end=circle.get_right())
@@ -124,7 +105,6 @@ class Saper(Slide, ThreeDScene):
         
         
         self.wait()
-
 
     # Riemann cylinders on a curve
     # Each slice of surface area → A = 2pi * f((Xa + Xb)/2) * change in length
@@ -202,7 +182,19 @@ class Saper(Slide, ThreeDScene):
         self.play(*[Create(c) for c in circles])
 
         self.next_slide()
-        
+
+    # TODO: BRYAN 
+    # diagram for riemann approx, Pa Pb
+    def riemann_slide(self):
+        pass
+    
+    # deriving formula just latex
+    def derive_slide(self):
+        pass
+
+    # vertical / horizontal definition
+    def def_slide(self):
+        pass
 
     def construct(self):
         self.title_slide()
@@ -215,15 +207,9 @@ class Saper(Slide, ThreeDScene):
         self.next_slide()
         self.fade_out_clear()
 
-        self.circle_slide()
+        self.review_slide()
         
         self.next_slide()
         self.fade_out_clear()
 
         self.sin_3d_slide()
-
-        # 3d animation, takes a while to render
-        # self.slide3()
-
-        # self.next_slide()
-        # self.clear()
