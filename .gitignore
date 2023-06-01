@@ -4,6 +4,7 @@ slides
 slides_assets
 slides.html
 .vscode
-build
-Saper_assets
+node_modules
+.parcel-cache
 __pycache__
+.DS_Store
