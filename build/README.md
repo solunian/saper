@@ -1,6 +1,3 @@
 # Dev Notes
 
-- kinda weird...
-- Parcel doesn't exactly support static files out of the box...
-- I'm just going to upload the dist folder so that vercel can just use it instead of building it all
-- Saper_assets should be in dist
+- hmm?
