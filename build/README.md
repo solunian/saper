@@ -1,3 +1,3 @@
 # Dev Notes
 
-- hmm?
+- needs to use index.html as entry point i think?
