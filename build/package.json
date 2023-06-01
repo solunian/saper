@@ -1,12 +1,11 @@
 {
   "name": "saper",
   "version": "1.0.0",
+  "source": "Saper.html",
   "scripts": {
-    "dev": "npx parcel Saper.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "parcel",
+    "build": "parcel build"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "parcel": "^2.9.1"
   }
