@@ -1,7 +1,7 @@
 {
   "name": "saper",
   "version": "1.0.0",
-  "source": "Saper.html",
+  "source": "index.html",
   "scripts": {
     "dev": "parcel",
     "build": "parcel build"
