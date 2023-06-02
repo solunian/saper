@@ -113,6 +113,7 @@ class Saper(Slide, ThreeDScene):
         # transform sigma notation to integral notation
         self.play(TransformMatchingTex(e, f))
         self.next_slide()
+        self.fade_out_clear()
 
 
 
