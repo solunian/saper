@@ -196,63 +196,112 @@ class Saper(Slide, ThreeDScene):
 
         # derive formula for surface area of rotation
         # assuming f(x1) approxmately equals f(x2)
-        q = Text("Deriving the Formula", color=GREEN, gradient=(GREEN, TEAL)).to_edge(UP, buff=LARGE_BUFF * 1.5)
-        a = Text(r"We're finding the summation of the surface areas of many cylinders.", font_size=30).next_to(q, DOWN, buff=SMALL_BUFF * 3)
+        title = Text("Deriving the Formula", color=GREEN, gradient=(GREEN, TEAL)).to_edge(UP, buff=LARGE_BUFF * 1.2)
+        subt = Text("We need to find the summation of the surface areas of cylinders", font_size=30).next_to(title, DOWN, buff=SMALL_BUFF * 3)
 
         # each cylinder has a radius of f(x) and a width that is the distance between (x1, f(x1)) and (x2, f(x2))
-        b = Text("Each cylinder has a radius of f(x) and a width that is ", font_size=30).next_to(a, DOWN, buff=SMALL_BUFF * 3)
+        subt2 = Text("along the curve. Each cylinder has a radius of f(x) and a width", font_size=30).next_to(subt, DOWN, buff=SMALL_BUFF * 3)
         # the distance between (x1, f(x1)) and (x2, f(x2)))
     
         b2 = VGroup(
-            Text("the distance between ", font_size=30),
+            Text("that is the distance between ", font_size=30),
             MathTex(r"P_1(x_1, f(x_1))", font_size=30),
             Text("and", font_size=30),
             MathTex(r"P_2(x_2, f(x_2)) \text{.}", font_size=30),
-        ).arrange(RIGHT).next_to(b, DOWN, buff=SMALL_BUFF * 3)
+        ).arrange(RIGHT).next_to(subt2, DOWN, buff=SMALL_BUFF * 3)
 
 
-        self.play(FadeIn(VGroup(q)))
-        self.play(Write(VGroup(a)))
-        self.play(Write(VGroup(b)), Write(b2))
+        arc_ax = Axes(
+            x_range=[0, 10, 2.51], y_range=[0, 4, 1.1], x_length=4, y_length=2.5, axis_config={"include_tip": False, }
+        ).next_to(b2, direction=DOWN, buff=LARGE_BUFF)
+        labels = arc_ax.get_axis_labels(x_label="x", y_label="y")
 
+        sinfunc = lambda x : -0.1 * (x - 5) ** 2 + 3
+        graph = arc_ax.plot(sinfunc, color=WHITE)
+        arc = arc_ax.plot(sinfunc, x_range=[3, 6], color=MAROON)
+        partit = arc_ax.plot(sinfunc, x_range=[3, 4], color=GREEN)
 
-        c = MathTex(r"\text{Cylinder 1} + \text{Cylinder 2} + \text{Cylinder 3} + \dots + \text{Cylinder n}", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
+        x1_dot = Dot(partit.get_start(), color=GREEN)
+        x2_dot = Dot(partit.get_end(), color=GREEN)
+        x1_text = MathTex("P_1", font_size=20, color=GREEN).next_to(x1_dot, direction=UP, buff=0.1)
+        x2_text = MathTex("P_2", font_size=20, color=GREEN).next_to(x2_dot, direction=UP, buff=0.1)
 
-        d = MathTex(r"\text{Cylinder 1: } 2 \pi \frac{f(x_1) + f(x_2)}{2} \left| P_1 - P_2 \right|", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
-
-        # riemann
-        riemann = MathTex(r"\sum_{i=1}^{n} 2 \pi f(x_i^*) (x_{i+1} - x_i^*)", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
-        # limit
-        lim = MathTex(r"\lim_{n \to \infty}\sum_{i=1}^{n} 2 \pi f(x_i^*) (x_{i+1} - x_i)", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
-        # integral notation
-        integ = MathTex(r"\int_{a}^{b} 2 \pi f(x) \sqrt{1 + f'(x)^2} dx", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
-
-
-        
-        self.play(Write(VGroup(c)))
-        self.next_slide()
-        self.play(TransformMatchingTex(c, d))
-        self.next_slide()
-        # transform sum to sigma notation
-        self.play(TransformMatchingTex(d, riemann))
-        self.next_slide()
-
-        self.play(TransformMatchingTex(riemann, lim))
-        self.next_slide()
-
-        # transform sigma notation to integral notation
-        self.play(TransformMatchingTex(lim, integ))
+        self.play(FadeIn(VGroup(title)))
+        self.play(Write(VGroup(subt)))
+        self.play(Write(VGroup(subt2)), Write(b2))
+        self.play(FadeIn(VGroup(arc_ax, labels, graph, arc, partit, x1_dot, x2_dot, x1_text, x2_text)))
 
 
     def riemann_lim_int_slide(self):
-        pass
+        cyl = MathTex(r"\text{Cylinder 1} + \text{Cylinder 2} + \text{Cylinder 3} + \dots + \text{Cylinder n}", font_size=36).to_edge(UP, buff=MED_LARGE_BUFF * 2)
+
+        partarea = MathTex(r"\text{Cylinder 1: } 2 \pi \frac{f(x_1) + f(x_2)}{2} \left| P_1 - P_2 \right|", font_size=36).next_to(cyl, DOWN, buff=MED_SMALL_BUFF * 2)
+
+        br = Line([-5, 0, 0], [5, 0, 0]).next_to(partarea, direction=DOWN, buff=MED_LARGE_BUFF * 0.7)
+
+        # riemann
+        riemann = MathTex(r"\sum_{i=1}^{n} 2 \pi f(x_i^*) (x_{i+1} - x_i^*)", font_size=36).next_to(partarea, DOWN, buff=MED_SMALL_BUFF * 3)
+        # limit
+        lim = MathTex(r"\lim_{n \to \infty}\sum_{i=1}^{n} 2 \pi f(x_i^*) (x_{i+1} - x_i^*)", font_size=36).next_to(riemann, DOWN, buff=MED_SMALL_BUFF * 1.8)
+        # integral notation
+        integ = MathTex(r"\int_{a}^{b} 2 \pi f(x) \sqrt{1 + f'(x)^2} dx", font_size=36).next_to(lim, DOWN, buff=MED_SMALL_BUFF * 1.8)
+        
+        r_lab = Text("Riemann Sum", color=RED, font_size=16, should_center=False)
+        l_lab = Text("Limit of Riemann Sum", color=YELLOW_B, font_size=16, should_center=False)
+        i_lab = Text("Integral", color=GREEN, font_size=16, should_center=False)
+
+        labels = VGroup(r_lab, l_lab, i_lab).arrange(DOWN, buff=MED_LARGE_BUFF * 2.7, center=False).next_to(br.get_start(), DOWN, buff=MED_SMALL_BUFF).shift((0.5, 0, 0))
+
+        self.play(Write(VGroup(cyl)))
+        self.next_slide()
+        self.play(Write(VGroup(partarea)))
+        self.next_slide()
+
+        self.play(Write(VGroup(br, riemann, r_lab)))
+        self.next_slide()
+        self.play(Write(VGroup(lim, l_lab)))
+        self.next_slide()
+        self.play(Write(VGroup(integ, i_lab)))
     
 
-    def vert_hor_slide(self):
-        pass
+    def questions_slide(self):
+        self.play(Write(VGroup(
+            Text("Questions!", color=TEAL_B),
+            Text("¡Preguntas!", color=YELLOW_B),
+            Text("问题!", color=RED_B),
+            Text("질문!", color=PURPLE_B),
+            Text("質問!", color=LIGHT_PINK)
+            ).arrange(DOWN)))
 
     def credits_slide(self):
-        pass
+        title = Text("Credits", font_size=65, color=color.PINK).to_edge(UP, buff=LARGE_BUFF)
+
+        tools = VGroup(
+            Text("Tools Used", font_size=50, color=color.TEAL),
+            Text("manim by 3b1b", font_size=36),
+            Text("manim-slides", font_size=36),
+            Tex(r"\LaTeX"),
+        ).arrange(DOWN).to_edge(RIGHT, buff=LARGE_BUFF * 2).shift([0, 0.5, 0])
+
+        dev = VGroup(
+            Text("Team", font_size=50, color=color.GREEN),
+            Text("Developers - Daniel, Bryan", font_size=36),
+            Text("Lesson Planners - Esther, Jacqueline", font_size=36)
+        ).arrange(DOWN).to_edge(LEFT, buff=LARGE_BUFF).shift([0, 0.5, 0])
+
+        links = VGroup(
+            Text("website: https://saper-two.vercel.app/", font_size=24, t2c={"[9:]": color.BLUE}),
+            Text("source code: https://github.com/solunian/saper", font_size=24, t2c={"[13:]": color.BLUE}),
+        ).arrange(DOWN).to_edge(DOWN, buff=LARGE_BUFF).shift([-1, 0, 0])
+
+        qrcode = opengl.OpenGLImageMobject("imgs/link_qrcode.png", width=2, height=2).next_to(links, RIGHT, buff=MED_SMALL_BUFF * 2)
+
+        self.add(opengl.OpenGLGroup(qrcode))
+        self.play(FadeIn(VGroup(title), tools, dev, links))
+        
+
+        self.wait()
+        
 
     def construct(self):
         self.title_slide()
@@ -283,7 +332,12 @@ class Saper(Slide, ThreeDScene):
 
         self.riemann_lim_int_slide()
         
-        # self.next_slide()
-        # self.fade_out_clear()
+        self.next_slide()
+        self.fade_out_clear()
 
-        self.vert_hor_slide()
+        self.questions_slide()
+
+        self.next_slide()
+        self.fade_out_clear()
+
+        self.credits_slide()
