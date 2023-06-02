@@ -77,6 +77,53 @@ class Saper(Slide, ThreeDScene):
 
         self.wait()
 
+
+
+    def derivation_slide(self):
+
+        # derive formula for surface area of rotation
+        # assuming f(x1) approxmately equals f(x2)
+        q = Text("Deriving the Formula", font_size=50).to_edge(UP, buff=LARGE_BUFF * 2)
+        a = Tex(r"We're finding the surface area of a cylinder multiple times", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(q, DOWN, buff=SMALL_BUFF * 3)
+
+        # each cylinder has a radius of f(x) and a width that is the distance between (x1, f(x1)) and (x2, f(x2))
+        b = Text("Each cylinder has a radius of f(x) and a width that is the distance between (x1, f(x1)) and (x2, f(x2)))", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(a, DOWN, buff=SMALL_BUFF * 3)
+        c = MathTex(r"\text{Cylinder } 1: 2 \pi f(x_1) \cdot (x_2 - x_1)", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(a, DOWN, buff=SMALL_BUFF * 3)
+
+        # sum all the cylinders together
+        d = MathTex(r"\text{Cylinder } 1 + \text{Cylinder } 2 + \text{Cylinder } 3 + \dots + \text{Cylinder } n", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(c, DOWN, buff=SMALL_BUFF * 3)
+
+        # replace sum with sigma notation
+        e = MathTex(r"\sum_{i=1}^{n} 2 \pi f(x_i) \cdot (x_{i+1} - x_i)", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(c, DOWN, buff=SMALL_BUFF * 3)
+        # integral notation
+        f = MathTex(r"\int_{a}^{b} 2 \pi f(x) \cdot \sqrt{1 + f'(x)^2} dx", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(c, DOWN, buff=SMALL_BUFF * 3)
+
+
+        self.play(FadeIn(VGroup(q)))
+        self.play(Write(VGroup(a)))
+        self.play(Write(VGroup(b)))
+        self.play(Write(VGroup(c)))
+
+        self.play(Write(VGroup(d)))
+        # transform sum to sigma notation
+        self.next_slide()
+        self.play(TransformMatchingTex(d, e))
+        self.next_slide()
+
+        # transform sigma notation to integral notation
+        self.play(TransformMatchingTex(e, f))
+        self.next_slide()
+
+
+
+
+
+
+        
+
+
+
+
     # with circle and length of curve
     def review_slide(self):
         r_value = 1.5
@@ -207,9 +254,11 @@ class Saper(Slide, ThreeDScene):
         self.next_slide()
         self.fade_out_clear()
 
+        self.derivation_slide()
+
         self.review_slide()
         
         self.next_slide()
         self.fade_out_clear()
 
-        self.sin_3d_slide()
+        # self.sin_3d_slide()

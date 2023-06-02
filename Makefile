@@ -1,7 +1,9 @@
 default:
 	manim saper.py Saper --renderer=opengl --write_to_movie
 	manim-slides Saper
-
+defaulttest:
+	manim saper.py Saper --renderer=opengl --write_to_movie -ql
+	manim-slides Saper
 build:
 	manim saper.py Saper --renderer=opengl --write_to_movie
 
