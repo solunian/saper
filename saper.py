@@ -26,15 +26,16 @@ class Saper(Slide, ThreeDScene):
 
     def title_slide(self):
         ax = Axes(
-            x_range=[0, 10, 2.5], y_range=[0, 4, 1], x_length=4, y_length=2.5, axis_config={"include_tip": False, }
+            x_range=[0, 10, 2.51], y_range=[0, 4, 1.1], x_length=4, y_length=2.5, axis_config={"include_tip": False, }
         )
         labels = ax.get_axis_labels(x_label="x", y_label="y")
+        calc_text = Text("ap calc bc", font_size=15, fill_opacity=0.6).next_to(ax, DOWN).shift([1.6, 0.15, 0])
         graph = ax.plot(lambda x: -0.1*(x - 5)**2 + 3, color=MAROON)
 
 
         riemann = ax.get_riemann_rectangles(graph, dx=1.0, input_sample_type="center", color=[color.BLUE_B, color.GREEN_B])
 
-        graph_group = VGroup(ax, labels, riemann, graph)
+        graph_group = VGroup(ax, labels, riemann, graph, calc_text)
 
         # self.play(t.animate.set_value(x_space[minimum_index]))
 
@@ -42,29 +43,18 @@ class Saper(Slide, ThreeDScene):
         title = VGroup(
             Text("Surface Area of Rotation", font_size=60.0, t2c={"[:]": color.LIGHT_PINK}),
             Text("by Daniel, Bryan, Jacqueline, and Esther", font_size=36.0, t2c={"[:]": color.WHITE}),
-        ).arrange(DOWN).to_edge(DOWN, buff=LARGE_BUFF*1.8)
+        ).arrange(DOWN).to_edge(DOWN, buff=LARGE_BUFF*1.5)
         
         title_graph = graph_group.next_to(title, direction=UP, buff=MED_LARGE_BUFF)
 
         self.play(Write(title_graph), FadeIn(title))
 
 
-        # SLIDE 1
-        dot = Dot([-2, -1, 0])
-        dot2 = Dot([2, 1, 0])
-        line = Line(dot.get_center(), dot2.get_center()).set_color(ORANGE)
-        b1 = Brace(line)
-        b1text = b1.get_text("Horizontal distance")
-        b2 = Brace(line, direction=line.copy().rotate(PI / 2).get_unit_vector())
-        b2text = b2.get_tex("x-x_1")
-        slide1 = VGroup(line, dot, dot2, b1, b2, b1text, b2text)
-        self.play(FadeIn(slide1))
-
     def slide2(self):
-        
         sa_formula = MathTex(r"\int_{a}^{b}2 \pi f(x) \sqrt{1 +  f'(x)^ 2}dx")
         group = VGroup(sa_formula)
         self.play(Write(group))
+
 
     def info_slide(self):
         q = Text("Surface Area of Rotation", font_size=50).to_edge(UP, buff=LARGE_BUFF * 2)
@@ -76,7 +66,6 @@ class Saper(Slide, ThreeDScene):
         self.add(opengl.OpenGLGroup(pi_creature))
 
         self.wait()
-
 
 
     def derivation_slide(self):
@@ -116,17 +105,12 @@ class Saper(Slide, ThreeDScene):
         self.fade_out_clear()
 
 
-
-
-
-
-        
-
-
-
-
     # with circle and length of curve
     def review_slide(self):
+        review_text = Text("Review").to_corner(UL, buff=LARGE_BUFF)
+        self.play(Write(review_text))
+
+        # with circle and length of curve
         r_value = 1.5
         circle = Circle(radius=r_value, color=RED)
         radius = Line(start=circle.get_center(), end=circle.get_right())
@@ -135,7 +119,7 @@ class Saper(Slide, ThreeDScene):
         self.play(GrowFromCenter(circle))
         self.play(Write(VGroup(radius, r_text)))
 
-        self.next_slide()
+        self.wait()
 
         # TODO: figure out how to set the damn length of this line
 
@@ -145,24 +129,27 @@ class Saper(Slide, ThreeDScene):
         # circum.set_length(-r_value * PI * 2)
         circum_text = Text("circumference", color=RED).next_to(circum, direction=UP, buff=MED_SMALL_BUFF * 1.5)
 
-        new_radius = Line(start=(0, -r_value / 2, 0), end=(0, r_value / 2, 0)).next_to(circum, direction=DL, buff=MED_LARGE_BUFF)
-        # new_radius.set_length(r_value)
-        new_r_text = MathTex(r"r \cdot 2 \cdot \pi").next_to(new_radius, direction=RIGHT, buff=MED_LARGE_BUFF)
+        new_radius = Line(start=(-r_value / 2, 0, 0), end=(r_value / 2, 0, 0)).next_to(circum, direction=DL, buff=0).shift([r_value, -1, 0])
+        two_line = Line(start=(-r_value / 2, 0, 0), end=(r_value / 2, 0, 0)).next_to(new_radius, direction=RIGHT, buff=0).set_color(BLUE)
+        pi_line = Line(start=(0, 0, 0), end=(r_value * PI * 2 - r_value * 2, 0, 0)).next_to(two_line, direction=RIGHT, buff=0).set_color(PURPLE)
 
-        self.play(Transform(circle, circum), Write(VGroup(circum_text)), Transform(radius, new_radius), FadeOut(r_text), FadeIn(VGroup(new_r_text)))
+        new_r_text = MathTex(r"C = 2 \pi r") # .next_to(new_radius, direction=RIGHT, buff=MED_LARGE_BUFF)
+
+        self.play(Transform(circle, circum), Write(VGroup(circum_text)), FadeIn(VGroup(two_line, pi_line)), Transform(radius, new_radius), FadeOut(r_text), FadeIn(VGroup(new_r_text)))
         
         
         self.wait()
 
-    # Riemann cylinders on a curve
-    # Each slice of surface area → A = 2pi * f((Xa + Xb)/2) * change in length
-    # Xa ~= Xb because riemann
-    # Replace function with f(x) in equation
-    # Replace length with definition of two points
-    # Final Riemann sum definition 
-    # A = ∑i = 1 → n( 2pi * f(x) * sqrt(ds;kasdf) * change in x)
-
+        
     def sin_3d_slide(self):
+        # Riemann cylinders on a curve
+        # Each slice of surface area → A = 2pi * f((Xa + Xb)/2) * change in length
+        # Xa ~= Xb because riemann
+        # Replace function with f(x) in equation
+        # Replace length with definition of two points
+        # Final Riemann sum definition 
+        # A = ∑i = 1 → n( 2pi * f(x) * sqrt(ds;kasdf) * change in x)
+
         self.set_camera_orientation(0, 0, 0)
         axes = ThreeDAxes(x_length=8, y_length=6, z_length=4)
         labels = axes.get_axis_labels(x_label="x", y_label="y", z_label="z")
@@ -229,37 +216,39 @@ class Saper(Slide, ThreeDScene):
         
         self.play(*[Create(c) for c in circles])
 
-        self.next_slide()
+
 
     # TODO: BRYAN 
     # diagram for riemann approx, Pa Pb
     def riemann_slide(self):
         pass
-    
-    # deriving formula just latex
-    def derive_slide(self):
-        pass
 
-    # vertical / horizontal definition
+
+    # TODO: vertical / horizontal definition
     def def_slide(self):
         pass
 
+
     def construct(self):
-        self.title_slide()
+        # self.title_slide()
         
-        self.next_slide()
-        self.fade_out_clear()
+        # self.next_slide()
+        # self.fade_out_clear()
 
-        self.info_slide()
+        # self.info_slide()
         
-        self.next_slide()
-        self.fade_out_clear()
-
-        self.derivation_slide()
+        # self.next_slide()
+        # self.fade_out_clear()
 
         self.review_slide()
         
         self.next_slide()
         self.fade_out_clear()
 
-        # self.sin_3d_slide()
+        self.sin_3d_slide()
+
+        self.next_slide()
+        self.fade_out_clear()
+        self.set_camera_orientation(0, 0, 0)
+
+        self.derivation_slide()
