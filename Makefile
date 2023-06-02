@@ -16,4 +16,5 @@ present:
 	manim-slides Saper --fullscreen --aspect-ratio keep --start-paused
 
 html:
+	rm build/Saper_assets/*
 	manim-slides convert Saper build/Saper.html --open -ccontrols=true -ctitle="saper!"
