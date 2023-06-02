@@ -122,7 +122,7 @@ class Saper(Slide, ThreeDScene):
         self.play(GrowFromCenter(circle))
         self.play(Write(VGroup(radius, r_text)))
 
-        self.wait()
+        self.wait(0.1)
 
         # TODO: figure out how to set the damn length of this line
 
@@ -130,17 +130,34 @@ class Saper(Slide, ThreeDScene):
         # end = Dot((r_value * PI, 0, 0))
         circum = Line(start=(-r_value * PI, 0, 0), end=(r_value * PI, 0, 0)).to_edge(UP, buff=LARGE_BUFF * 2.5).set_color(RED)
         # circum.set_length(-r_value * PI * 2)
-        circum_text = Text("circumference", color=RED).next_to(circum, direction=UP, buff=MED_SMALL_BUFF * 1.5)
+        circum_text = Text("circumference", font_size=40, color=RED).next_to(circum, direction=UP, buff=MED_SMALL_BUFF * 1.5)
 
-        new_radius = Line(start=(-r_value / 2, 0, 0), end=(r_value / 2, 0, 0)).next_to(circum, direction=DL, buff=0).shift([r_value, -1, 0])
+        new_radius = Line(start=(-r_value / 2, 0, 0), end=(r_value / 2, 0, 0)).next_to(circum, direction=DL, buff=0).shift([r_value, -0.5, 0])
         two_line = Line(start=(-r_value / 2, 0, 0), end=(r_value / 2, 0, 0)).next_to(new_radius, direction=RIGHT, buff=0).set_color(BLUE)
         pi_line = Line(start=(0, 0, 0), end=(r_value * PI * 2 - r_value * 2, 0, 0)).next_to(two_line, direction=RIGHT, buff=0).set_color(PURPLE)
 
-        new_r_text = MathTex(r"C = 2 \pi r") # .next_to(new_radius, direction=RIGHT, buff=MED_LARGE_BUFF)
+
+        new_r_text = MathTex(r"C = 2 \pi r").next_to(VGroup(new_radius, two_line, pi_line), direction=DOWN, buff=MED_SMALL_BUFF) # .next_to(new_radius, direction=RIGHT, buff=MED_LARGE_BUFF)
 
         self.play(Transform(circle, circum), Write(VGroup(circum_text)), FadeIn(VGroup(two_line, pi_line)), Transform(radius, new_radius), FadeOut(r_text), FadeIn(VGroup(new_r_text)))
-        
-        
+
+        self.wait()
+
+
+
+        arc_ax = Axes(
+            x_range=[0, 10, 2.51], y_range=[0, 4, 1.1], x_length=4, y_length=2.5, axis_config={"include_tip": False, }
+        ).to_edge(DL, buff=LARGE_BUFF * 1.5).shift((0, -0.5, 0))
+        labels = arc_ax.get_axis_labels(x_label="x", y_label="y")
+        graph = arc_ax.plot(lambda x: -0.1*(x - 5)**2 + 3, color=WHITE)
+
+        arc_text = Text("Length of the Curve", font_size=40, color=MAROON)
+        formula = MathTex(r"\int_{a}^{b} \sqrt{1 +  f'(x)^ 2}dx").next_to(arc_text, direction=DOWN, buff=MED_LARGE_BUFF)
+
+        arc_group = VGroup(arc_text, formula).to_edge(DR, buff=LARGE_BUFF * 1.5).shift((-1, -0.5, 0))
+
+        self.play(Write(VGroup(arc_ax, labels, graph)), Write(arc_group))
+
         self.wait()
 
         
@@ -233,15 +250,15 @@ class Saper(Slide, ThreeDScene):
 
 
     def construct(self):
-        # self.title_slide()
+        self.title_slide()
         
-        # self.next_slide()
-        # self.fade_out_clear()
+        self.next_slide()
+        self.fade_out_clear()
 
-        # self.info_slide()
+        self.info_slide()
         
-        # self.next_slide()
-        # self.fade_out_clear()
+        self.next_slide()
+        self.fade_out_clear()
 
         self.review_slide()
         
