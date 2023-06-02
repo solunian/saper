@@ -1,21 +1,16 @@
 from manim import *
 from manim import opengl
 
-# or: from manimlib import *
 from manim_slides import Slide, ThreeDSlide
-import math
 
 OFFSET_TAU = PI * 2 + 0.01
 
 
 class Saper3D(ThreeDSlide):
-
     def construct(self):
         self.slide1()
         self.next_slide()
         
-    pass
-
 
 class Saper(Slide, ThreeDScene):
 
@@ -29,7 +24,7 @@ class Saper(Slide, ThreeDScene):
             x_range=[0, 10, 2.51], y_range=[0, 4, 1.1], x_length=4, y_length=2.5, axis_config={"include_tip": False, }
         )
         labels = ax.get_axis_labels(x_label="x", y_label="y")
-        calc_text = Text("ap calc bc", font_size=15, fill_opacity=0.6).next_to(ax, DOWN).shift([1.6, 0.15, 0])
+        calc_text = Text("ap calc bc!", font_size=15, fill_opacity=0.6).next_to(ax, DOWN).shift([1.6, 0.1, 0])
         graph = ax.plot(lambda x: -0.1*(x - 5)**2 + 3, color=MAROON)
 
 
@@ -50,12 +45,6 @@ class Saper(Slide, ThreeDScene):
         self.play(Write(title_graph), FadeIn(title))
 
 
-    def slide2(self):
-        sa_formula = MathTex(r"\int_{a}^{b}2 \pi f(x) \sqrt{1 +  f'(x)^ 2}dx")
-        group = VGroup(sa_formula)
-        self.play(Write(group))
-
-
     def info_slide(self):
         q = Text("Surface Area of Rotation", font_size=50).to_edge(UP, buff=LARGE_BUFF * 2)
         a = Text("The surface area that a graph makes when rotated!", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(q, DOWN, buff=SMALL_BUFF * 3)
@@ -68,47 +57,6 @@ class Saper(Slide, ThreeDScene):
         self.wait()
 
 
-    def derivation_slide(self):
-
-        # derive formula for surface area of rotation
-        # assuming f(x1) approxmately equals f(x2)
-        q = Text("Deriving the Formula", font_size=50).to_edge(UP, buff=LARGE_BUFF)
-        a = Tex(r"We're finding the surface area of a cylinder multiple times", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(q, DOWN, buff=SMALL_BUFF * 3)
-
-        # each cylinder has a radius of f(x) and a width that is the distance between (x1, f(x1)) and (x2, f(x2))
-        b = Text("Each cylinder has a radius of f(x) and a width that is ", font_size=30, gradient=(TEAL_B, GREEN_B)).next_to(a, DOWN, buff=SMALL_BUFF * 3)
-        # the distance between (x1, f(x1)) and (x2, f(x2)))
-        b2 = Text("the distance between (x1, f(x1)) and (x2, f(x2)))", font_size=30, gradient=(TEAL_B, GREEN_B)).next_to(b, DOWN, buff=SMALL_BUFF * 3)
-
-        c = MathTex(r"\text{Cylinder } 1: 2 \pi f(x_1) \cdot (x_2 - x_1)", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(b2, DOWN, buff=SMALL_BUFF * 3)
-
-        # sum all the cylinders together
-        d = MathTex(r"\text{Cylinder } 1 + \text{Cylinder } 2 + \text{Cylinder } 3 + \dots + \text{Cylinder } n", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(c, DOWN, buff=SMALL_BUFF * 3)
-
-        # replace sum with sigma notation
-        e = MathTex(r"\sum_{i=1}^{n} 2 \pi f(x_i) \cdot (x_{i+1} - x_i)", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(c, DOWN, buff=SMALL_BUFF * 3)
-        # integral notation
-        f = MathTex(r"\int_{a}^{b} 2 \pi f(x) \cdot \sqrt{1 + f'(x)^2} dx", font_size=40, gradient=(TEAL_B, GREEN_B)).next_to(c, DOWN, buff=SMALL_BUFF * 3)
-
-
-        self.play(FadeIn(VGroup(q)))
-        self.play(Write(VGroup(a)))
-        self.play(Write(VGroup(b, b2)))
-        self.play(Write(VGroup(c)))
-        self.next_slide()
-        self.play(TransformMatchingTex(c, d))
-        self.next_slide()
-        # transform sum to sigma notation
-        self.play(TransformMatchingTex(d, e))
-        self.next_slide()
-
-        # transform sigma notation to integral notation
-        self.play(TransformMatchingTex(e, f))
-        self.next_slide()
-        self.fade_out_clear()
-
-
-    # with circle and length of curve
     def review_slide(self):
         review_text = Text("Review").to_corner(UL, buff=LARGE_BUFF)
         self.play(Write(review_text))
@@ -144,19 +92,28 @@ class Saper(Slide, ThreeDScene):
         self.wait()
 
 
-
         arc_ax = Axes(
             x_range=[0, 10, 2.51], y_range=[0, 4, 1.1], x_length=4, y_length=2.5, axis_config={"include_tip": False, }
         ).to_edge(DL, buff=LARGE_BUFF * 1.5).shift((0, -0.5, 0))
         labels = arc_ax.get_axis_labels(x_label="x", y_label="y")
-        graph = arc_ax.plot(lambda x: -0.1*(x - 5)**2 + 3, color=WHITE)
 
-        arc_text = Text("Length of the Curve", font_size=40, color=MAROON)
+        sinfunc = lambda x : -0.1 * (x - 5) ** 2 + 3
+        graph = arc_ax.plot(sinfunc, color=WHITE)
+        arc = arc_ax.plot(sinfunc, x_range=[3, 6], color=MAROON)
+
+        a = Dot(arc.get_start(), color=MAROON)
+        b = Dot(arc.get_end(), color=MAROON)
+        a_text = Text("a", font_size=20, color=ORANGE).next_to(a, direction=UP, buff=0.1)
+        b_text = Text("b", font_size=20, color=ORANGE).next_to(b, direction=UP, buff=0.1)
+
+        arc_text = Text("Length of a Curve", font_size=40, color=MAROON)
         formula = MathTex(r"\int_{a}^{b} \sqrt{1 +  f'(x)^ 2}dx").next_to(arc_text, direction=DOWN, buff=MED_LARGE_BUFF)
 
         arc_group = VGroup(arc_text, formula).to_edge(DR, buff=LARGE_BUFF * 1.5).shift((-1, -0.5, 0))
 
-        self.play(Write(VGroup(arc_ax, labels, graph)), Write(arc_group))
+        self.play(Write(VGroup(arc_ax, labels, graph)))
+        self.play(Write(VGroup(arc, a, b, a_text, b_text)))
+        self.play(Write(arc_group))
 
         self.wait()
 
@@ -173,8 +130,6 @@ class Saper(Slide, ThreeDScene):
         self.set_camera_orientation(0, 0, 0)
         axes = ThreeDAxes(x_length=8, y_length=6, z_length=4)
         labels = axes.get_axis_labels(x_label="x", y_label="y", z_label="z")
-        # circle = Circle(radius=3, color=BLUE)
-        # dot = Dot(color=RED)
 
         self.add(axes)
 
@@ -184,6 +139,7 @@ class Saper(Slide, ThreeDScene):
 
         func = lambda x: np.sin(x) + 2
         curve = axes.plot(func, color=color.ORANGE, stroke_width=8)
+        curve_text = MathTex(r"f(x) = \sin(x) + 2", font_size=25).next_to(curve, direction=UP, buff=MED_SMALL_BUFF).shift((2, 0, 0))
 
 
         # generate surface for the func plot
@@ -208,11 +164,10 @@ class Saper(Slide, ThreeDScene):
             ))
 
 
-
-        # 
-        self.play(Write(VGroup(axes, labels, curve)))
+        self.play(Write(VGroup(axes, labels, curve, curve_text)))
         
         self.next_slide()
+        self.play(FadeOut(VGroup(curve_text)))
 
         # rotation from flat plane
         self.begin_ambient_camera_rotation(rate=120 * DEGREES, about="theta")
@@ -227,27 +182,77 @@ class Saper(Slide, ThreeDScene):
         self.stop_ambient_camera_rotation("gamma")
 
 
-        self.play(Create(surface))
+        for c in circles:
+            self.play(Create(c))
 
         self.next_slide()
-        
-        self.play(FadeOut(surface))
+
+        self.play(*[FadeOut(c) for c in circles])
+
+        self.play(Create(surface))
+
+
+    def derive_slide(self):
+
+        # derive formula for surface area of rotation
+        # assuming f(x1) approxmately equals f(x2)
+        q = Text("Deriving the Formula", color=GREEN, gradient=(GREEN, TEAL)).to_edge(UP, buff=LARGE_BUFF * 1.5)
+        a = Text(r"We're finding the summation of the surface areas of many cylinders.", font_size=30).next_to(q, DOWN, buff=SMALL_BUFF * 3)
+
+        # each cylinder has a radius of f(x) and a width that is the distance between (x1, f(x1)) and (x2, f(x2))
+        b = Text("Each cylinder has a radius of f(x) and a width that is ", font_size=30).next_to(a, DOWN, buff=SMALL_BUFF * 3)
+        # the distance between (x1, f(x1)) and (x2, f(x2)))
+    
+        b2 = VGroup(
+            Text("the distance between ", font_size=30),
+            MathTex(r"P_1(x_1, f(x_1))", font_size=30),
+            Text("and", font_size=30),
+            MathTex(r"P_2(x_2, f(x_2)) \text{.}", font_size=30),
+        ).arrange(RIGHT).next_to(b, DOWN, buff=SMALL_BUFF * 3)
+
+
+        self.play(FadeIn(VGroup(q)))
+        self.play(Write(VGroup(a)))
+        self.play(Write(VGroup(b)), Write(b2))
+
+
+        c = MathTex(r"\text{Cylinder 1} + \text{Cylinder 2} + \text{Cylinder 3} + \dots + \text{Cylinder n}", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
+
+        d = MathTex(r"\text{Cylinder 1: } 2 \pi \frac{f(x_1) + f(x_2)}{2} \left| P_1 - P_2 \right|", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
+
+        # riemann
+        riemann = MathTex(r"\sum_{i=1}^{n} 2 \pi f(x_i^*) (x_{i+1} - x_i^*)", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
+        # limit
+        lim = MathTex(r"\lim_{n \to \infty}\sum_{i=1}^{n} 2 \pi f(x_i^*) (x_{i+1} - x_i)", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
+        # integral notation
+        integ = MathTex(r"\int_{a}^{b} 2 \pi f(x) \sqrt{1 + f'(x)^2} dx", font_size=40).next_to(b2, DOWN, buff=MED_SMALL_BUFF * 4)
+
 
         
-        self.play(*[Create(c) for c in circles])
+        self.play(Write(VGroup(c)))
+        self.next_slide()
+        self.play(TransformMatchingTex(c, d))
+        self.next_slide()
+        # transform sum to sigma notation
+        self.play(TransformMatchingTex(d, riemann))
+        self.next_slide()
+
+        self.play(TransformMatchingTex(riemann, lim))
+        self.next_slide()
+
+        # transform sigma notation to integral notation
+        self.play(TransformMatchingTex(lim, integ))
 
 
+    def riemann_lim_int_slide(self):
+        pass
+    
 
-    # TODO: BRYAN 
-    # diagram for riemann approx, Pa Pb
-    def riemann_slide(self):
+    def vert_hor_slide(self):
         pass
 
-
-    # TODO: vertical / horizontal definition
-    def def_slide(self):
+    def credits_slide(self):
         pass
-
 
     def construct(self):
         self.title_slide()
@@ -271,4 +276,14 @@ class Saper(Slide, ThreeDScene):
         self.fade_out_clear()
         self.set_camera_orientation(0, 0, 0)
 
-        self.derivation_slide()
+        self.derive_slide()
+
+        self.next_slide()
+        self.fade_out_clear()
+
+        self.riemann_lim_int_slide()
+        
+        # self.next_slide()
+        # self.fade_out_clear()
+
+        self.vert_hor_slide()
