@@ -1,6 +1,6 @@
 default:
 	rm -rf dist/*
-	cp Saper.html index.html
-	cp -r Saper_assets dist
-	cp favicon.ico dist
+	mv Saper.html index.html
+	mv Saper_assets dist
+	mv favicon.ico dist
 	rm -rf .parcel-cache
